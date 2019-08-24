@@ -1,14 +1,14 @@
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
-import { addKey } from './actions';
+import { login, logout } from './actions';
 
-const apiKey = handleActions({
-  [addKey]: (_state, action) => action.payload
-}, true);
+const loggedIn = handleActions({
+  [login]: () => true,
+  [logout]: () => false
+}, false);
 
 export default combineReducers({
-  apiKey
+  loggedIn
 });
 
-export const getIsAuthorized = state => state.auth.apiKey !== false;
-export const getApiKey = state => state.auth.apiKey;
+export const getIsLoggedIn = state => state.auth.loggedIn;

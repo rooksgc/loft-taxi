@@ -6,14 +6,14 @@ const randomAction = {
 };
 
 describe('Reducer auth', () => {
-  const state0 = reducer(undefined, randomAction);
+  // const state0 = reducer(undefined, randomAction);
 
-  describe('action addKey', () => {
-    it('Добавляет ключ в reducer apiKey', () => {
-      const testValue = '123';
-      const state1 = reducer(state0, addKey(testValue));
+  // describe('action addKey', () => {
+  //   it('Добавляет ключ в reducer apiKey', () => {
+  //     const testValue = '123';
+  //     const state1 = reducer(state0, addKey(testValue));
 
-      expect(state1.apiKey).toBe(testValue);
-    });
-  });
+  //     expect(state1.apiKey).toBe(testValue);
+  //   });
+  // });
 });
