@@ -5,7 +5,6 @@ import Map from '../Map';
 import Profile from '../Profile';
 import Login from '../Login';
 import PrivateRoute from '../PrivateRoute';
-import './Router.module.css';
 
 export default () => {
   const map = props => <Map {...props} />;
