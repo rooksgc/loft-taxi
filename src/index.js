@@ -6,6 +6,9 @@ import createStore from './store';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core/styles';
+import { initLocalStore } from './localStore';
+
+initLocalStore();
 
 const theme = createMuiTheme({
   typography: {

@@ -1,11 +1,18 @@
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
 import { login, logout } from './actions';
+import { loadFromLocalStore, saveToLocalStore } from '../../localStore';
 
 const loggedIn = handleActions({
-  [login]: () => true,
-  [logout]: () => false
-}, false);
+  [login]: () => {
+    saveToLocalStore('loggedIn', true);
+    return true
+  },
+  [logout]: () => {
+    saveToLocalStore('loggedIn', false);
+    return false;
+  }
+}, loadFromLocalStore('loggedIn'));
 
 export default combineReducers({
   loggedIn

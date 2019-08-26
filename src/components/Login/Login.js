@@ -86,7 +86,6 @@ const Login = props => {
     const { login } = props;
     if (username !== "test@test.com" && password !== "123123") return;
     login();
-    return <Redirect to="/map" />;
   };
 
   return isLoggedIn ? (
