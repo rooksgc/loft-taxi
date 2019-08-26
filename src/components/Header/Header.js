@@ -1,7 +1,7 @@
 import React from "react";
-// import styles from "./Toolbar.module.css";
 import { connect } from "react-redux";
-import { getIsLoggedIn, login, logout } from "../../modules/Auth";
+import { Link } from "react-router-dom";
+import { getIsLoggedIn, logout } from "../../modules/Auth";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -16,25 +16,42 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2)
   },
   title: {
+    fontWeight: 400,
     flexGrow: 1
+  },
+  link: {
+    textDecoration: "none"
+  },
+  button: {
+    fontWeight: 400
   }
 }));
 
 const Header = props => {
   const classes = useStyles();
-  const { isLoggedin } = props;
+  const { isLoggedin, logout } = props;
 
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Toolbar>       
+        <Toolbar>
           <Typography variant="h6" className={classes.title}>
             Loft Taxi
           </Typography>
-          {!isLoggedin ? (
-            <Button color="inherit" onClick={login}>Войти</Button>
+          <Link to="/map" className={classes.link}>
+            <Button className={classes.button}>Карта</Button>
+          </Link>
+          <Link to="/profile" className={classes.link}>
+            <Button className={classes.button}>Профиль</Button>
+          </Link>
+          {isLoggedin ? (
+            <Button className={classes.button} onClick={logout}>
+              Выйти
+            </Button>
           ) : (
-            <Button color="inherit" onClick={logout}>Выйти</Button>
+            <Link to="/login" className={classes.link}>
+              <Button className={classes.button}>Войти</Button>
+            </Link>
           )}
         </Toolbar>
       </AppBar>
@@ -44,5 +61,5 @@ const Header = props => {
 
 export default connect(
   state => ({ isLoggedin: getIsLoggedIn(state) }),
-  { login, logout }
+  { logout }
 )(Header);
