@@ -10,7 +10,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import MaskedInput from "react-text-mask";
 import { saveProfileRequest, getProfile } from "../../modules/Profile";
-import { Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./Profile.css";
 import { loadFromLocalStore } from "../../localStore";
 
@@ -28,8 +28,15 @@ const styles = theme => ({
     width: 900
   },
   button: {
-    marginTop: theme.spacing(5),
+    marginTop: theme.spacing(4),
     marginLeft: theme.spacing(1.5)
+  },
+  p: {
+    marginTop: theme.spacing(4),
+    marginLeft: theme.spacing(1.5)
+  },
+  link: {
+    textDecoration: "none"
   },
   h1: {
     width: "100%",
@@ -44,7 +51,7 @@ const styles = theme => ({
 });
 
 const validate = values => {
-  const savedValues = loadFromLocalStore('profile');
+  const savedValues = loadFromLocalStore("profile");
   if (savedValues) {
     for (let key in savedValues) {
       if (!values[key]) {
@@ -157,6 +164,8 @@ const Profile = props => {
   const { handleSubmit, pristine, submitting, classes } = props;
   const data = loadFromLocalStore("profile");
 
+  const [submitted, setSubmitted] = useState(false);
+
   const [cardName, setCardName] = useState(
     data && data.cardName ? data.cardName : ""
   );
@@ -178,84 +187,98 @@ const Profile = props => {
     setExpDate(event.target.value);
   };
 
-  const [cvv, setCvv] = useState(
-    data && data.cvv ? data.cvv : ""
-  );
+  const [cvv, setCvv] = useState(data && data.cvv ? data.cvv : "");
   const onChangeCvv = event => {
     setCvv(event.target.value);
   };
 
   const onSubmit = formData => {
     const { saveProfileRequest } = props;
+    setSubmitted(true);
     saveProfileRequest(formData);
-    console.log(formData);
   };
 
   return (
     <Paper className={classes.root}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container spacing={3}>
+      {submitted ? (
+        <>
           <Typography className={classes.h1} component="h1">
             Профиль
           </Typography>
-          <Typography className={classes.h3}>Способ оплаты</Typography>
-          <Grid item xs={12} sm={6}>
-            <Field
-              id="cardName"
-              name="cardName"
-              type="text"
-              label="Имя владельца"
-              onChange={onChangeCardName}
-              InputProps={{ value: cardName }}
-              component={customField}
-            />
-            <Field
-              id="expDate"
-              name="expDate"
-              type="date"
-              label="Дата окончания действия"
-              onChange={onChangeExpDate}
-              InputLabelProps={{shrink: true}}
-              InputProps={{ value: expDate }}
-              component={customField}
-            />
+          <Typography className={classes.p} component="p">
+            Платёжные данные обновлены. Теперь вы можете заказывать такси.
+          </Typography>
+          <Link to="/map" className={classes.link}>
+            <Button variant="contained" className={classes.button}>
+              ПЕРЕЙТИ НА КАРТУ
+            </Button>
+          </Link>
+        </>
+      ) : (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={3}>
+            <Typography className={classes.h1} component="h1">
+              Профиль
+            </Typography>
+            <Typography className={classes.h3}>Способ оплаты</Typography>
+            <Grid item xs={12} sm={6}>
+              <Field
+                id="cardName"
+                name="cardName"
+                type="text"
+                label="Имя владельца"
+                onChange={onChangeCardName}
+                InputProps={{ value: cardName }}
+                component={customField}
+              />
+              <Field
+                id="expDate"
+                name="expDate"
+                type="date"
+                label="Дата окончания действия"
+                onChange={onChangeExpDate}
+                InputLabelProps={{ shrink: true }}
+                InputProps={{ value: expDate }}
+                component={customField}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Field
+                id="cardNumber"
+                name="cardNumber"
+                type="text"
+                label="Номер карты"
+                onChange={onChangeCardNumber}
+                InputProps={{
+                  inputComponent: MaskedCardNumber,
+                  value: cardNumber
+                }}
+                component={customField}
+              />
+              <Field
+                id="cvv"
+                name="cvv"
+                type="text"
+                label="CVV"
+                onChange={onChangeCvv}
+                InputProps={{
+                  inputComponent: MaskedCvv,
+                  value: cvv
+                }}
+                component={customField}
+              />
+            </Grid>
+            <Button
+              className={classes.button}
+              variant="contained"
+              type="submit"
+              disabled={pristine || submitting}
+            >
+              Сохранить
+            </Button>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Field
-              id="cardNumber"
-              name="cardNumber"
-              type="text"
-              label="Номер карты"
-              onChange={onChangeCardNumber}
-              InputProps={{
-                inputComponent: MaskedCardNumber,
-                value: cardNumber
-              }}
-              component={customField}
-            />
-            <Field
-              id="cvv"
-              name="cvv"
-              type="text"
-              label="CVV"
-              onChange={onChangeCvv}
-              InputProps={{
-                inputComponent: MaskedCvv,
-                value: cvv
-              }}
-              component={customField}
-            />
-          </Grid>
-          <Button
-            className={classes.button}
-            variant="contained"
-            type="submit"
-            disabled={pristine || submitting}
-          >
-            Сохранить
-          </Button>
-        </Grid>
-      </form>
+        </form>
+      )}
     </Paper>
   );
 };

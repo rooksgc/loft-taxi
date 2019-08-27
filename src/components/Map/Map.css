@@ -1,0 +1,30 @@
+.map-container {
+  position: relative;
+  z-index: -10;
+}
+
+.map-viewport {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  width: 100%;
+  height: calc(100vh - 64px);
+  z-index: 0;
+}
+
+.no-payment-data,
+.route-choise {
+  position: absolute;
+  left: 20px;
+  top: 50px;
+}
+
+.no-payment-data h1 {
+  font-size: 2.2em;
+}
+
+.no-payment-data p {
+  margin-top: 20px;
+}
