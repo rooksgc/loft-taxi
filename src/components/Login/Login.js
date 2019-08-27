@@ -8,7 +8,11 @@ import Typography from "@material-ui/core/Typography";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import { login, getIsLoggedIn } from "../../modules/Auth";
+import {
+  loginRequest,
+  getAuthError,
+  getIsLoggedIn
+} from "../../modules/Auth";
 import { Redirect } from "react-router-dom";
 import "./Login.css";
 
@@ -35,18 +39,11 @@ const styles = theme => ({
 const validate = values => {
   const errors = {};
   const requiredFields = ["username", "password"];
-
   requiredFields.forEach(field => {
     if (!values[field]) {
       errors[field] = "Обязательное поле";
     }
   });
-  if (values.username && values.username !== "test@test.com") {
-    errors.username = "Неверный логин";
-  }
-  if (values.password && values.password !== "123123") {
-    errors.password = "Неверный пароль";
-  }
   return errors;
 };
 
@@ -79,13 +76,10 @@ const customField = ({
 );
 
 const Login = props => {
-  const { handleSubmit, pristine, submitting, classes, isLoggedIn } = props;
-
+  const { handleSubmit, pristine, submitting, classes, isLoggedIn, authError } = props;
   const onSubmit = formData => {
-    const { username, password } = formData;
-    const { login } = props;
-    if (username !== "test@test.com" && password !== "123123") return;
-    login();
+    const { loginRequest } = props;
+    loginRequest(formData);
   };
 
   return isLoggedIn ? (
@@ -117,6 +111,7 @@ const Login = props => {
             component={customField}
             label="Пароль"
           />
+          {authError && <p className="auth-error">{authError}</p>}
           <Button
             className={classes.button}
             variant="contained"
@@ -138,9 +133,10 @@ export default reduxForm({
   withStyles(styles)(
     connect(
       state => ({
-        isLoggedIn: getIsLoggedIn(state)
+        isLoggedIn: getIsLoggedIn(state),
+        authError: getAuthError(state)
       }),
-      { login }
+      { loginRequest }
     )(Login)
   )
 );

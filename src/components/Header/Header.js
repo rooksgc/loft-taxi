@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { getIsLoggedIn, logout } from "../../modules/Auth";
+import { getIsLoggedIn, logoutRequest } from "../../modules/Auth";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
 
 const Header = props => {
   const classes = useStyles();
-  const { isLoggedin, logout } = props;
+  const { isLoggedin, logoutRequest } = props;
 
   return (
     <div className={classes.root}>
@@ -45,7 +45,7 @@ const Header = props => {
             <Button className={classes.button}>Профиль</Button>
           </Link>
           {isLoggedin ? (
-            <Button className={classes.button} onClick={logout}>
+            <Button className={classes.button} onClick={logoutRequest}>
               Выйти
             </Button>
           ) : (
@@ -61,5 +61,5 @@ const Header = props => {
 
 export default connect(
   state => ({ isLoggedin: getIsLoggedIn(state) }),
-  { logout }
+  { logoutRequest }
 )(Header);
