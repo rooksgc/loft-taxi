@@ -1,11 +1,11 @@
-import reducer from './auth';
-import { addKey } from './actions';
+import reducer from './profile';
+import { saveProfileRequest } from './actions';
 
-const randomAction = {
-  type: `RANDOM_ACTION_${parseInt(Math.random() * 1000, 10)}`
-};
+// const randomAction = {
+//   type: `RANDOM_ACTION_${parseInt(Math.random() * 1000, 10)}`
+// };
 
-describe('Reducer auth', () => {
+describe('Reducer profile', () => {
   // const state0 = reducer(undefined, randomAction);
 
   // describe('action addKey', () => {

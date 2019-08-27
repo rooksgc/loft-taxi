@@ -1,5 +1,3 @@
-const localstate = localStorage.getItem('state');
-
 export const getInitialState = () => {
   return {
     loggedIn: false,
@@ -8,6 +6,7 @@ export const getInitialState = () => {
 }
 
 export const initLocalStore = () => {
+  const localstate = localStorage.getItem('state');
   if (!localstate) {
     const initialState = JSON.stringify(getInitialState());
     localStorage.setItem('state', initialState);
@@ -15,6 +14,7 @@ export const initLocalStore = () => {
 }
 
 export const getLocalState = () => {
+  const localstate = localStorage.getItem('state');
   const parsedData = JSON.parse(localstate);
   return parsedData || getInitialState();
 }

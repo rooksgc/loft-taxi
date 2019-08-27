@@ -1,3 +1,3 @@
 import { createAction } from 'redux-actions';
 
-export const saveProfile = createAction('PROFILE/SAVE');
+export const saveProfileRequest = createAction('PROFILE/SAVE');

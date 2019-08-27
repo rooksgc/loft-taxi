@@ -1,14 +1,10 @@
 import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
-import { saveProfile } from './actions';
-import { loadFromLocalStore, saveToLocalStore } from '../../localStore';
+import { saveProfileRequest } from './actions';
+import { loadFromLocalStore } from '../../localStore';
 
 const profile = handleActions({
-  [saveProfile]: (_state, action) => {
-    
-    // todo - saveToLocalStore => to saga
-    saveToLocalStore('profile', action.payload);
-
+  [saveProfileRequest]: (_state, action) => {
     return {
       ..._state,
       ...action.payload

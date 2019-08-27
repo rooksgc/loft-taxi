@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Field, reduxForm } from "redux-form";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
@@ -8,18 +8,18 @@ import Typography from "@material-ui/core/Typography";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { withStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
-import MaskedInput from 'react-text-mask';
-import PropTypes from 'prop-types';
-import { saveProfile, getProfile } from "../../modules/Profile";
+import MaskedInput from "react-text-mask";
+import { saveProfileRequest, getProfile } from "../../modules/Profile";
 import { Redirect } from "react-router-dom";
-import './Profile.css';
+import "./Profile.css";
+import { loadFromLocalStore } from "../../localStore";
 
 const styles = theme => ({
   root: {
     padding: theme.spacing(3, 2),
     minWidth: 400,
     maxWidth: 800,
-    margin: '10vh auto'
+    margin: "10vh auto"
   },
   form: {
     ...theme.mixins.gutters(),
@@ -44,6 +44,15 @@ const styles = theme => ({
 });
 
 const validate = values => {
+  const savedValues = loadFromLocalStore('profile');
+  if (savedValues) {
+    for (let key in savedValues) {
+      if (!values[key]) {
+        values[key] = savedValues[key];
+      }
+    }
+  }
+
   const errors = {};
   const requiredFields = ["cardName", "cardNumber", "expDate", "cvv"];
 
@@ -53,18 +62,22 @@ const validate = values => {
     }
   });
 
-  if (values.cardName && !/^[A-Za-z\s]+$/.test(values.cardName) ) {
-    errors.username = "Поле может содержатиь только символы латинского алфавита";
+  if (values.cardName && !/^[A-Za-z\s]+$/.test(values.cardName)) {
+    errors.cardName = "Поле может содержатиь только буквы латинского алфавита";
   }
 
-  // if (values.cardNumber && values.cardNumber !== "123123") {
-  //   errors.password = "Неверный пароль";
-  // }
+  if (values.cardNumber && values.cardNumber.replace(/\s/g, "").length !== 16) {
+    errors.cardNumber = "Поле должно иметь длину 16 символов";
+  }
+
+  if (values.cvv && values.cvv.replace(/\s/g, "").length !== 3) {
+    errors.cvv = "Поле должно иметь длину 3 символа";
+  }
 
   return errors;
 };
 
-const MaskedCardNumber = (props) => {
+const MaskedCardNumber = props => {
   const { inputRef, ...other } = props;
   return (
     <MaskedInput
@@ -72,125 +85,165 @@ const MaskedCardNumber = (props) => {
       ref={ref => {
         inputRef(ref ? ref.inputElement : null);
       }}
-      mask={[/\d/, /\d/,/\d/,/\d/,' ',/\d/,/\d/,/\d/,/\d/, ' ', /\d/,/\d/,/\d/,/\d/, ' ',/\d/,/\d/,/\d/,/\d/]}
-      placeholderChar={'\u2000'}
-      showMask
+      mask={[
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+        " ",
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+        " ",
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/,
+        " ",
+        /\d/,
+        /\d/,
+        /\d/,
+        /\d/
+      ]}
+      placeholderChar={"\u2000"}
     />
   );
-}
+};
 
-MaskedCardNumber.propTypes = {
-  inputRef: PropTypes.func.isRequired,
+const MaskedCvv = props => {
+  const { inputRef, ...other } = props;
+  return (
+    <MaskedInput
+      {...other}
+      ref={ref => {
+        inputRef(ref ? ref.inputElement : null);
+      }}
+      mask={[/\d/, /\d/, /\d/]}
+      placeholderChar={"\u2000"}
+    />
+  );
 };
 
 const customField = ({
   id,
-  input,
   type,
   placeholder,
   label,
   meta: { touched, error },
+  input,
   ...rest
-}) => {
-  switch(id) {
-    case 'cardNumber':
-      return (
-        <>
-          <TextField
-            key={id}
-            className="profile-input"
-            margin="dense"
-            required={true}
-            placeholder={label}
-            label={label}
-            type={type}
-            error={!!(touched && error)}
-            InputProps={{
-              inputComponent: MaskedCardNumber
-            }}
-            {...input}
-            {...rest}
-          />
-          {touched && error && (
-            <FormHelperText className="profile-error">{error}</FormHelperText>
-          )}
-        </>
-      );
-    default:
-      return (
-        <>
-          <TextField
-            key={id}
-            className="profile-input"
-            margin="dense"
-            required={true}
-            placeholder={label}
-            label={label}
-            type={type}
-            error={!!(touched && error)}
-            {...input}
-            {...rest}
-          />
-          {touched && error && (
-            <FormHelperText className="profile-error">{error}</FormHelperText>
-          )}
-        </>
-      );
-  }
-};
+}) => (
+  <>
+    <TextField
+      key={id}
+      className="profile-input"
+      margin="dense"
+      required={true}
+      placeholder={label}
+      label={label}
+      type={type}
+      error={!!(touched && error)}
+      {...input}
+      {...rest}
+    />
+    {touched && error && (
+      <FormHelperText className="profile-error">{error}</FormHelperText>
+    )}
+  </>
+);
 
 const Profile = props => {
   const { handleSubmit, pristine, submitting, classes } = props;
+  const data = loadFromLocalStore("profile");
+
+  const [cardName, setCardName] = useState(
+    data && data.cardName ? data.cardName : ""
+  );
+  const onChangeCardName = event => {
+    setCardName(event.target.value);
+  };
+
+  const [cardNumber, setCardNumber] = useState(
+    data && data.cardNumber ? data.cardNumber : ""
+  );
+  const onChangeCardNumber = event => {
+    setCardNumber(event.target.value);
+  };
+
+  const [expDate, setExpDate] = useState(
+    data && data.expDate ? data.expDate : ""
+  );
+  const onChangeExpDate = event => {
+    setExpDate(event.target.value);
+  };
+
+  const [cvv, setCvv] = useState(
+    data && data.cvv ? data.cvv : ""
+  );
+  const onChangeCvv = event => {
+    setCvv(event.target.value);
+  };
 
   const onSubmit = formData => {
+    const { saveProfileRequest } = props;
+    saveProfileRequest(formData);
     console.log(formData);
-    // saveProfile();
-    // const { username, password } = formData;
-    // const { login } = props;
-    // if (username !== "test@test.com" && password !== "123123") return;
-    // login();
   };
 
   return (
-    <Paper className={classes.root} >
+    <Paper className={classes.root}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Typography className={classes.h1} component="h1">
             Профиль
           </Typography>
-          <Typography className={classes.h3}>
-            Способ оплаты
-          </Typography>
+          <Typography className={classes.h3}>Способ оплаты</Typography>
           <Grid item xs={12} sm={6}>
             <Field
               id="cardName"
               name="cardName"
               type="text"
-              component={customField}
               label="Имя владельца"
+              onChange={onChangeCardName}
+              InputProps={{ value: cardName }}
+              component={customField}
             />
             <Field
               id="expDate"
               name="expDate"
-              type="text"
-              component={customField}
+              type="date"
               label="Дата окончания действия"
+              onChange={onChangeExpDate}
+              InputLabelProps={{shrink: true}}
+              InputProps={{ value: expDate }}
+              component={customField}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
             <Field
-                id="cardNumber"
-                name="cardNumber"
-                type="text"
-                component={customField}
-                label="Номер карты"
-              />
+              id="cardNumber"
+              name="cardNumber"
+              type="text"
+              label="Номер карты"
+              onChange={onChangeCardNumber}
+              InputProps={{
+                inputComponent: MaskedCardNumber,
+                value: cardNumber
+              }}
+              component={customField}
+            />
             <Field
               id="cvv"
               name="cvv"
               type="text"
-              component={customField}
               label="CVV"
+              onChange={onChangeCvv}
+              InputProps={{
+                inputComponent: MaskedCvv,
+                value: cvv
+              }}
+              component={customField}
             />
           </Grid>
           <Button
@@ -216,7 +269,7 @@ export default reduxForm({
       state => ({
         profile: getProfile(state)
       }),
-      {  }
+      { saveProfileRequest }
     )(Profile)
   )
 );
