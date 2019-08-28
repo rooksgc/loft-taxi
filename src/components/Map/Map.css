@@ -14,17 +14,21 @@
   z-index: 0;
 }
 
-.no-payment-data,
-.route-choise {
+.card {
   position: absolute;
   left: 20px;
   top: 50px;
 }
 
-.no-payment-data h1 {
+.card h1,
+.card h1 {
   font-size: 2.2em;
 }
 
-.no-payment-data p {
+.card p {
   margin-top: 20px;
+}
+
+.route-select {
+  height: 60px;
 }
