@@ -8,7 +8,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { getProfile } from "../../modules/Profile";
 import { connect } from "react-redux";
 import mapboxgl from "mapbox-gl";
-import { getRoute, getAddresslist } from "./api";
+import { getRoute, getAddresslist, mapboxAccessToken } from "./api";
 import "./Map.css";
 
 const styles = theme => ({
@@ -44,8 +44,8 @@ class Map extends PureComponent {
     const { addresses } = this.state;
     if (!addresses) this.fetchAddresses();
 
-    mapboxgl.accessToken =
-      "pk.eyJ1Ijoicm9va3NnYyIsImEiOiJjanptamVvd3UxMzkxM2xwbWd2b3E1bWZ6In0.dtut7RO3w4SiOar-J3sGLA";
+    mapboxgl.accessToken = mapboxAccessToken;
+
     this.map = new mapboxgl.Map({
       container: this.mapContainer.current,
       style: "mapbox://styles/mapbox/streets-v9",
@@ -63,8 +63,7 @@ class Map extends PureComponent {
         }));
         this.setState({ addresses });
       },
-      error => {
-        console.log(error);
+      () => {
         this.setState({ addresses: null });
       }
     );

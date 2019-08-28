@@ -53,7 +53,7 @@ const styles = theme => ({
 const validate = values => {
   const savedValues = loadFromLocalStore("profile");
   if (savedValues) {
-    for (let key in savedValues) {
+    for (const key in savedValues) {
       if (!values[key]) {
         values[key] = savedValues[key];
       }
@@ -198,6 +198,15 @@ const Profile = props => {
     saveProfileRequest(formData);
   };
 
+  const onReset = () => {
+    const { saveProfileRequest } = props;
+    saveProfileRequest(null);
+    setCardName('');
+    setCardNumber('');
+    setExpDate('');
+    setCvv('');
+  };
+
   return (
     <Paper className={classes.root}>
       {submitted ? (
@@ -275,6 +284,15 @@ const Profile = props => {
               disabled={pristine || submitting}
             >
               Сохранить
+            </Button>
+
+            <Button
+              className={classes.button}
+              variant="contained"
+              disabled={!cardName && !cardNumber && !expDate && !cvv}
+              onClick={onReset}
+            >
+              Очистить
             </Button>
           </Grid>
         </form>

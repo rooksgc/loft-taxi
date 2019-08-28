@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import Router from './components/Router';
 import './index.css';
 import createStore from './store';
@@ -26,7 +26,7 @@ const theme = createMuiTheme({
 
 const store = createStore();
 
-ReactDOM.render(
+render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <Router />
