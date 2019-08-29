@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const Header = props => {
+export const Header = props => {
   const classes = useStyles();
   const { isLoggedin, logoutRequest } = props;
 
@@ -35,7 +35,11 @@ const Header = props => {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h6" className={classes.title}>
+          <Typography
+            variant="h6"
+            className={classes.title}
+            data-testid="header-text"
+          >
             Loft Taxi
           </Typography>
           <Link to="/map" className={classes.link}>
