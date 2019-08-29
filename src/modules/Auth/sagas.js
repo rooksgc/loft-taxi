@@ -36,6 +36,6 @@ function* authWatcher() {
   yield takeEvery(logoutRequest, logoutFlow);
 }
 
-export default function*() {
+export default function* () {
   yield fork(authWatcher);
 }
