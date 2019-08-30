@@ -1,10 +1,10 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import Header from '../Header';
 import Map from '../Map';
 import Profile from '../Profile';
 import Login from '../Login';
 import PrivateRoute from '../PrivateRoute';
-import './Router.module.css';
 
 export default () => {
   const map = props => <Map {...props} />;
@@ -13,11 +13,12 @@ export default () => {
 
   return (
     <BrowserRouter>
+      <Header />
       <Switch>
         <PrivateRoute path="/map" component={map} />
         <PrivateRoute path="/profile" component={profile} />
-        <Route path="/login" exact component={login} />
-        <Redirect from="/" to="/login" />
+        <Route path="/login" component={login} />
+        <Redirect from="*" to="/map" />
       </Switch>
     </BrowserRouter>
   )

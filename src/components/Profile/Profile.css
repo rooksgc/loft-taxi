@@ -1,0 +1,9 @@
+.profile-input {
+  width: 100%;
+  margin-top: 20px !important;
+  margin-bottom: 10px !important;
+}
+
+.profile-error {
+  color: red !important;
+}

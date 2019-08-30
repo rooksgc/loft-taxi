@@ -1,0 +1,15 @@
+.login-input {
+  width: 100%;
+  margin-top: 20px !important;
+  margin-bottom: 10px !important;
+}
+
+.login-error {
+  color: red !important;
+}
+
+.auth-error {
+  text-align: center;
+  font-size: 1em;
+  color: red !important;
+}

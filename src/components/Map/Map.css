@@ -1,0 +1,34 @@
+.map-container {
+  position: relative;
+  z-index: -10;
+}
+
+.map-viewport {
+  position: absolute;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  width: 100%;
+  height: calc(100vh - 64px);
+  z-index: 0;
+}
+
+.card {
+  position: absolute;
+  left: 20px;
+  top: 50px;
+}
+
+.card h1,
+.card h1 {
+  font-size: 2.2em;
+}
+
+.card p {
+  margin-top: 20px;
+}
+
+.route-select {
+  height: 60px;
+}
