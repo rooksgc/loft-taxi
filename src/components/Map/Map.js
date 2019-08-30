@@ -121,10 +121,7 @@ class Map extends PureComponent {
   };
 
   render() {
-    const {
-      classes,
-      profile: { profile }
-    } = this.props;
+    const { classes, profile } = this.props;
     const { orderPlaced, addresses } = this.state;
 
     return (
@@ -148,15 +145,16 @@ class Map extends PureComponent {
               </Paper>
             </div>
           ) : (
-            addresses &&
-            <div className="card">
-              <Paper className={classes.root}>
-                <Select
-                  addresses={addresses}
-                  onRouteChange={this.onRouteChange}
-                />
-              </Paper>
-            </div>
+            addresses && (
+              <div className="card">
+                <Paper className={classes.root}>
+                  <Select
+                    addresses={addresses}
+                    onRouteChange={this.onRouteChange}
+                  />
+                </Paper>
+              </div>
+            )
           )
         ) : (
           <div className="card">

@@ -14,19 +14,19 @@ describe("Тест редьюсера profile", () => {
     expDate: '2020-10-01'
   };
 
-  it("В редьюсере определено поле profile", () => {
-    expect(state0.profile).toBeDefined();
+  it("Начальное значение редьюсера равно null", () => {
+    expect(state0).toBeNull();
   });
 
-  it("saveProfileRequest заполняет значение profile из объекта payload", () => {
+  it("Action saveProfileRequest заполняет значение profile из объекта payload", () => {
     const state1 = reducer(state0, saveProfileRequest(payload));
-    expect(state1.profile).toEqual(payload);
+    expect(state1).toEqual(payload);
   });
 
   it("Если payload = null, то поле profile в state не меняется", () => {
     const payload = null;
     const state1 = reducer(state0, saveProfileRequest(payload));
-    expect(state1.profile).toEqual(state0.profile);
+    expect(state1).toEqual(state0);
   });
 
   it("Селектор getProfile возвращает текущее значение профиля", () => {

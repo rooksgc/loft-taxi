@@ -1,4 +1,3 @@
-import { combineReducers } from 'redux';
 import { handleActions } from 'redux-actions';
 import { saveProfileRequest } from './actions';
 import { loadFromLocalStore } from '../../localStore';
@@ -13,8 +12,6 @@ const profile = handleActions({
   },
 }, loadFromLocalStore('profile'));
 
-export default combineReducers({
-  profile
-});
+export default profile;
 
 export const getProfile = state => state.profile;
