@@ -43,18 +43,20 @@ export const Header = props => {
             Loft Taxi
           </Typography>
           <Link to="/map" className={classes.link}>
-            <Button className={classes.button}>Карта</Button>
+            <Button className={classes.button} data-testid="header-button-map">
+              Карта
+            </Button>
           </Link>
           <Link to="/profile" className={classes.link}>
-            <Button className={classes.button}>Профиль</Button>
+            <Button className={classes.button} data-testid="header-button-profile">Профиль</Button>
           </Link>
           {isLoggedin ? (
-            <Button className={classes.button} onClick={logoutRequest}>
+            <Button className={classes.button} onClick={logoutRequest} data-testid="header-button-logout">
               Выйти
             </Button>
           ) : (
             <Link to="/login" className={classes.link}>
-              <Button className={classes.button}>Войти</Button>
+              <Button className={classes.button} data-testid="header-button-login">Войти</Button>
             </Link>
           )}
         </Toolbar>

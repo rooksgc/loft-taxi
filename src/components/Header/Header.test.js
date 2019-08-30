@@ -8,7 +8,6 @@ import { cleanup, fireEvent, render } from '@testing-library/react';
 afterEach(cleanup);
 
 describe('Тест компонента Header', () => {
-
   describe('Рендер компонента', () => {
     it('Рендер проходит без ошибок', () => {
       const container = document.createElement('div');
@@ -25,28 +24,18 @@ describe('Тест компонента Header', () => {
       expect(element.innerHTML).toBe('Loft Taxi');
     });
 
-    // it('Должен содержать кнопки "Карта", "Профиль" и "Войти", если пользователь не залогинился', () => {
-      // const { getByTestId } = render(<Header />);
-      // const element = getByTestId('header-text');
-      // expect(element.tagName).toBe('H6');
-      // expect(element.innerHTML).toBe('Loft Taxi');
-    // });
+    it('Должен содержать кнопки "Карта", "Профиль" и "Войти", для неавторизованного пользователя', () => {
+      const { getByTestId } = render(<BrowserRouter><Header isLoggedin={false} /></BrowserRouter>);
+      expect(getByTestId('header-button-map')).toBeDefined();
+      expect(getByTestId('header-button-profile')).toBeDefined();
+      expect(getByTestId('header-button-login')).toBeDefined();
+    });
+
+    it('Должен содержать кнопки "Карта", "Профиль" и "Выйти", для авторизованного пользователя', () => {
+      const { getByTestId } = render(<BrowserRouter><Header isLoggedin={true} /></BrowserRouter>);
+      expect(getByTestId('header-button-map')).toBeDefined();
+      expect(getByTestId('header-button-profile')).toBeDefined();
+      expect(getByTestId('header-button-logout')).toBeDefined();
+    });
   });
-
-  // describe('Поведение компонента', () => {
-  //   it('Клик по кнопке increment увеличивает значение счетчика на 1', () => {
-  //     const { getByText, getByTestId } = render(<Counter />);
-  //     fireEvent.click(getByText("Increment"));
-  //     const counter = getByTestId('counter');
-  //     expect(counter.innerHTML).toBe('1');
-  //   });
-  
-  //   it('Клик по кнопке decrement уменьшает значение счетчика на 1', () => {
-  //     const { getByText, getByTestId } = render(<Counter />);
-  //     fireEvent.click(getByText("Decrement"));
-  //     const counter = getByTestId('counter');
-  //     expect(counter.innerHTML).toBe('-1');
-  //   });
-  // });
-
 });
