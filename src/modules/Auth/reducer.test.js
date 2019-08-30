@@ -1,4 +1,4 @@
-import reducer from "./auth";
+import reducer, { getIsLoggedIn, getAuthError } from "./auth";
 import {
   loginRequest,
   loginSuccess,
@@ -41,5 +41,18 @@ describe("Тест редьюсера auth", () => {
     const state1 = reducer(state0, loginFailure(payload));
     expect(state1.loggedIn).toBe(false);
     expect(state1.authError).toBe(payload);
+  });
+
+  it("Селектор getIsLoggedIn возвращает значение поля loggedIn", () => {
+    const state1 = reducer(state0, loginSuccess());
+    const currentLoggedIn = getIsLoggedIn({auth: state1});
+    expect(state1.loggedIn).toBe(currentLoggedIn);
+  });
+
+  it("Селектор getAuthError возвращает значение поля authError", () => {
+    const payload = "Неверный пароль";
+    const state1 = reducer(state0, loginFailure(payload));
+    const currentAuthError = getAuthError({auth: state1});
+    expect(state1.authError).toBe(currentAuthError);
   });
 });
